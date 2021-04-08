@@ -65,7 +65,7 @@ function App() {
                 <img className="reviewImg" src={file? URL.createObjectURL(file) : null} alt={file? file.name : null} />
               </div>
               <a
-                href="!#"
+                href=""
                 className="button btn-floating btn-large waves-effect waves-light red"
                 onClick={handleOnClick}
               >
@@ -140,7 +140,7 @@ function App() {
           </div> */}
 
             <a
-              href="!#"
+              href=""
               className="download btn-floating btn-medim waves-effect waves-light red "
               onClick={handleDownload}
             >
@@ -149,7 +149,7 @@ function App() {
               </i>
             </a>
             <a
-              href="!#"
+              href=""
               className="ctc btn-floating btn-medim waves-effect waves-light red "
               onClick={(navigator.clipboard.writeText(ocr), notify)}
             >
