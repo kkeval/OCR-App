@@ -1,5 +1,7 @@
 
 
+
+Check this App Live Here  : https://ocr-app-react.netlify.app/
 ## Available Scripts
 
 In the project directory, you can run:
