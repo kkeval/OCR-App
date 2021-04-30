@@ -1,41 +1,49 @@
-import React from 'react';
-import {
-  ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
-  theme,
-} from '@chakra-ui/react';
-import { ColorModeSwitcher } from './ColorModeSwitcher';
-import { Logo } from './Logo';
+import React from "react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { AuthProvider } from "../src/contexts/AuthContext";
+import Login from "./components/login/Login";
+import SignUp from "./components/Signup/Signup";
+import OcrApp from "./components/OcrApp";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Navbar from "./components/Navbar/NavBar";
+import PrivateRoute from "./components/PrivateRoute";
+
+import ForgotPass from "./components/ForgotPass";
+import UpdateProfile from "./components/Navbar/UpdateProfile";
+import NotFound from "./components/NotFound";
 
 function App() {
+  const theme = extendTheme({
+    components: {
+      Button: {
+        baseStyle: {
+          _focus: {
+            boxShadow: "none",
+          },
+        },
+      },
+    },
+  });
+
   return (
-    <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
-        <Grid minH="100vh" p={3}>
-          <ColorModeSwitcher justifySelf="flex-end" />
-          <VStack spacing={8}>
-            <Logo h="40vmin" pointerEvents="none" />
-            <Text>
-              Edit <Code fontSize="xl">src/App.js</Code> and save to reload.
-            </Text>
-            <Link
-              color="teal.500"
-              href="https://chakra-ui.com"
-              fontSize="2xl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn Chakra
-            </Link>
-          </VStack>
-        </Grid>
-      </Box>
-    </ChakraProvider>
+    <AuthProvider>
+      <ChakraProvider theme={theme}>
+        <Router>
+          <Navbar />
+
+          <Switch>
+            
+            <Route  path="/login" component={Login} />
+            <Route  path="/signup" component={SignUp} />
+            <Route  path="/forgot-password" component={ForgotPass} />
+            <PrivateRoute exact path="/update-profile" component={UpdateProfile} />
+            <Route exact path="/" component={OcrApp} />
+            <Route component={NotFound}/>
+          
+          </Switch>
+        </Router>
+      </ChakraProvider>
+    </AuthProvider>
   );
 }
 
