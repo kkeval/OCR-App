@@ -24,7 +24,7 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  useDisclosure,
+  useDisclosure
 } from "@chakra-ui/react";
 import {
   MdCheck,
@@ -182,7 +182,7 @@ function OcrApp() {
           </DrawerContent>
         </DrawerOverlay>
       </Drawer>
-      <Container maxW="85%" as={Flex} direction="row" h="lg" w="100%">
+      <Container maxW="85%" as={Flex} maxH="lg" >
         <Flex
           direction="column"
           py="2"
@@ -300,7 +300,28 @@ function OcrApp() {
           bg={useColorModeValue("white", "black")}
           position="relative"
         >
-          <Box w="100%" overflowY="scroll">
+          <Box w="100%"
+            overflowY="auto"
+            css={{
+              '&::-webkit-scrollbar': {
+                
+                backgroundColor: useColorModeValue("gray","black"),
+                borderRadius: "10px",
+                width: '8px'
+              },
+              '&::-webkit-scrollbar-track': {
+                shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
+                borderRadius: "10px",
+                backgroundColor: useColorModeValue("gray.900","gray")
+              },
+              '&::-webkit-scrollbar-thumb': {
+                borderRadius: "10px",
+                shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
+                backgroundColor: useColorModeValue("black","white")
+              }
+            }}
+          
+          >
             <Text p={4}>{ocr}</Text>
           </Box>
 

@@ -71,10 +71,10 @@ export default function SignUpForm() {
             <Box>
               <FormLabel>Email address</FormLabel>
               <Input
-                // name="email"
+                name="email"
                 type="email"
                 ref={emailRef}
-                autoComplete="email"
+               
                 required
               />
             </Box>
@@ -91,7 +91,7 @@ export default function SignUpForm() {
             <Box>
               <FormLabel>Re-enter Password</FormLabel>
               <Input
-                name="password"
+                name="conpassword"
                 type="password"
                 ref={passConRef}
                 autoComplete="password"

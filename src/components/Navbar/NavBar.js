@@ -19,7 +19,7 @@ export default function NavBar() {
     <Flex
       w="100%"
       h="6em"
-      mb="40px"
+      mb="10px"
       alignItems="center"
       justifyContent="center"
     >
