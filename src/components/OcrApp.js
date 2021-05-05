@@ -454,7 +454,7 @@ function OcrApp() {
             <Icon fontSize="25px" as={MdFileDownload} />
           </Box>
           <Box
-            onClick={copyIt}
+            onClick={handlecopytoClip}
             cursor="pointer"
             boxShadow="dark-lg"
             as={Circle}

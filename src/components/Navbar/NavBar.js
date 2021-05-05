@@ -1,6 +1,5 @@
 import { useAuth } from "../../contexts/AuthContext";
 import { Link as ReLink } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import {
   Box,
   Button,
@@ -20,21 +19,11 @@ export default function NavBar() {
   return (
     <Flex
       h={{base:"70px",md:"100px"}}
-      mb={{base:"30px",md:"10px"}}
+      mb={{base:"60px",md:"10px"}}
       alignItems="center"
       justifyContent="center"
     >
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover={false}
-      />
+   
       <Heading
         as={ReLink}
         to="/"
