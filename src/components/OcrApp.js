@@ -276,9 +276,7 @@ function OcrApp() {
           </DrawerContent>
         </DrawerOverlay>
       </Drawer>
-      <Container as={Flex} maxH="lg"
-       direction={{base:"column"}}
-      >
+      <Container maxW="85%" as={Flex} maxH="lg">
         <Flex
           direction="column"
           py="2"
@@ -288,7 +286,7 @@ function OcrApp() {
           position="relative"
           boxShadow="dark-lg"
           borderRadius="20px"
-          w="500px"
+          w="100%"
           mr="50px"
           bg={useColorModeValue("white", "black")}
         >
