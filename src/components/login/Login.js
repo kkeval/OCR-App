@@ -45,9 +45,9 @@ export default function Login() {
   }
 
   return (
-    <Box maxW="md" mx="auto">
-      <Heading textAlign="center" size="xl" fontWeight="extrabold">
-        Login in to your account
+    <Box maxW={{base:"90%",md:"450px"}} mx="auto">
+      <Heading textAlign="center" fontSize={{base:"30px",md:"40px"}} fontWeight="extrabold">
+        Login in Here
       </Heading>
 
       <Box as={ReLink}
@@ -56,9 +56,10 @@ export default function Login() {
         
           mt="2"
           mb="5"
-          align="center"
+          fontSize={{base:"sm",md:"18px"}}
+          textAlign="center"
           color={useColorModeValue("blue.500", "blue.200")}
-          maxW="md"
+          maxW="100%"
           fontWeight="medium"
         >
           Don&apos;t have an account?{" "}

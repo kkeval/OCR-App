@@ -10,9 +10,7 @@ export const Card = (props) => (
       md: '10',
     }}
     shadow="base"
-    rounded={{
-      sm: 'lg',
-    }}
+    rounded='lg'
     {...props}
   />
 )

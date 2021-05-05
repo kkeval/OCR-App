@@ -5,9 +5,9 @@ import SignUpForm from "./SignUpForm";
 import { Link as ReLink } from "react-router-dom";
 
 const SignUp = () => (
-  <Box maxW="md" mx="auto">
+  <Box  maxW={{base:"90%",md:"450px"}} mx="auto">
     
-    <Heading textAlign="center" size="xl" fontWeight="extrabold" >
+    <Heading textAlign="center"  fontSize={{base:"30px",md:"40px"}} fontWeight="extrabold" >
       Sign Up Here
     </Heading>
     <Box as={ReLink}
@@ -16,9 +16,10 @@ const SignUp = () => (
         
           mt="2"
           mb="5"
-          align="center"
+          fontSize={{base:"sm",md:"18px"}}
+          textAlign="center"
           color={useColorModeValue("blue.500", "blue.200")}
-          maxW="md"
+          maxW="100%"
           fontWeight="medium"
         >
           Already have an account?

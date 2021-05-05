@@ -19,9 +19,8 @@ export default function NavBar() {
 
   return (
     <Flex
-      w="100%"
-      h="6em"
-      mb="10px"
+      h={{base:"70px",md:"100px"}}
+      mb={{base:"30px",md:"10px"}}
       alignItems="center"
       justifyContent="center"
     >
@@ -42,29 +41,29 @@ export default function NavBar() {
         style={{ fontFamily: "'Press Start 2P' ", textDecoration: "none" }}
         ml="20px"
         fontWeight="bold"
-        fontSize="45px"
+        fontSize={{base:"20px",md:"45px",lg:"50px"}}
         bgGradient="linear(to-r, #7928CA,#FF0080)"
         bgClip="text"
+        w={{base:"400px", md:"500px",lg:"500px"}}
       >
         OCR APP
       </Heading>
-      <Spacer />
+      <Spacer
+      />
       {!currentUser && (
-        <Box>
-          <Button colorScheme="light" variant="ghost" mr="2" fontSize="lg">
+          <>
+          <Button colorScheme="light" variant="ghost" mr={{base:"1px",md:"10px"}}fontSize={{base:"15px",md:'20px'}}>
             <Text as={ReLink} style={{ textDecoration: "none" }} as={ReLink} to="/signup">
               Sign Up
             </Text>
           </Button>
-
-     
-            <Button colorScheme="light" variant="ghost" mr="2" fontSize="lg">
+            <Button colorScheme="light" variant="ghost" mr={{base:"1px",md:"10px"}} fontSize={{base:"15px",md:'20px'}}>
             <Text as={ReLink} style={{ textDecoration: "none" }}  to="/login">
               Login
               </Text>
             </Button>
-       
-        </Box>
+       </>
+        
       )}
       {currentUser && (
         <>
@@ -74,7 +73,7 @@ export default function NavBar() {
           <Profile />
         </>
       )}
-      <ColorModeSwitcher ml="10px" mr="10px" />
+      <ColorModeSwitcher  ml={{base:"1px",md:"10px"}} mr={{base:"2px",md:"10px"}} />
     </Flex>
   );
 }
