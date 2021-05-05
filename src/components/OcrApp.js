@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Box,
   Text,
@@ -24,7 +24,15 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  useDisclosure
+  useDisclosure,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
 } from "@chakra-ui/react";
 import {
   MdCheck,
@@ -37,18 +45,28 @@ import { jsPDF } from "jspdf";
 import { useAuth } from "../contexts/AuthContext";
 import { useColorModeValue } from "@chakra-ui/react";
 import "react-toastify/dist/ReactToastify.css";
+import { database } from "../firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
 
 function OcrApp() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const btnRef = useRef();
   const [file, setFile] = useState(null);
   const [ocr, setOcr] = useState("");
   const [lang, setLang] = useState("eng");
+  const [fdata, setFdata] = useState([]);
+  const [isOpenpop, setIsOpen] = useState(false);
+  const [selectLng, setSelectLng] = useState(false);
+  const close = () => setIsOpen(false);
+  const closelng = () => setSelectLng(false);
+
   const toast = useToast();
   const [progress, setProgress] = useState("0");
   const fileRef = useRef();
   const { currentUser } = useAuth();
+
   const bgColor = useColorModeValue("gray.900", "gray.700");
 
   const worker = createWorker({
@@ -83,11 +101,63 @@ function OcrApp() {
         title: "Please Select A File",
         status: "error",
         duration: 9000,
+
         isClosable: true,
       });
     }
     doOCR();
   };
+
+  useEffect(() => {
+    if (currentUser == null) {
+      return;
+    } else {
+      const updateRef = database.ocrdata.doc(currentUser.email);
+      updateRef.onSnapshot((doc) => {
+        setFdata(Object.values(doc.data().userocrData));
+        console.log("Current data: ", Object.values(doc.data().userocrData));
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (file !== null) {
+      setSelectLng(!selectLng);
+    }
+    else{
+      return
+    }
+  }, [file]);
+
+  useEffect(() => {
+    if (currentUser == null) {
+      return;
+    }
+    if (ocr !== "") {
+      console.log("done");
+      const updateRef = database.ocrdata.doc(currentUser.email);
+      updateRef
+        .update({
+          userocrData: firebase.firestore.FieldValue.arrayUnion(ocr),
+        })
+        .then((docRef) => {
+          console.log(docRef);
+        })
+        .catch((error) => {
+          console.error("Error adding document: ", error);
+        });
+      setIsOpen(!isOpenpop);
+    }
+  }, [ocr, currentUser, database]);
+
+  // const userocrData =  fdata.length ?  (
+  //   Object.values(fdata).map((data ,i) => {
+  //     return(
+
+  //     )
+  //   })
+  // ) : (<Heading> None Data </Heading>)
+
   const copyIt = () => {
     navigator.clipboard.writeText(ocr);
     toast({
@@ -95,9 +165,23 @@ function OcrApp() {
       title: "Copied",
       status: "success",
       duration: 9000,
+
       isClosable: true,
     });
   };
+
+  // function ReadtocrData() {
+  //   var updateArrayRef = database.ocrdata.doc(currentUser.email);
+  //   updateArrayRef.update({
+  //     ocrdata:firebase.firestore.FieldValue.arrayUnion(ocr)
+  //   })
+  //   .then((docRef) => {
+  //     console.log(docRef);
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error adding document: ", error);
+  //   });
+  // }
 
   const handlecopytoClip = () => {
     if (ocr === "") {
@@ -146,6 +230,7 @@ function OcrApp() {
         placement="right"
         onClose={onClose}
         finalFocusRef={btnRef}
+       
       >
         <DrawerOverlay>
           <DrawerContent>
@@ -154,35 +239,44 @@ function OcrApp() {
               <Heading>History</Heading>{" "}
             </DrawerHeader>
 
-            <DrawerBody>
-              <Text color={useColorModeValue("gray")}>{currentUser && currentUser.email}</Text>
-              <Stack mt={10} spacing={2}>
-                <Skeleton height="30px" />
-                <Skeleton height="30px" />
-                <Skeleton height="30px" />
-              </Stack>
-              <Stack mt={5} spacing={2}>
-                <Skeleton height="30px" />
-                <Skeleton height="30px" />
-                <Skeleton height="30px" />
-              </Stack>
-              <Stack mt={5} spacing={2}>
-                <Skeleton height="30px" />
-                <Skeleton height="30px" />
-                <Skeleton height="30px" />
-              </Stack>
-              <Stack mt={5} spacing={2}>
-                <Skeleton height="30px" />
-                <Skeleton height="30px" />
-                <Skeleton height="30px" />
-              </Stack>
+            <DrawerBody
+            
+            
+            >
+              <Text color={useColorModeValue("gray")} mb="10px">
+                {currentUser && currentUser.email}
+              </Text>
+              
+                {fdata &&
+                  fdata.length > 0 &&
+                  fdata.map((d, i) => (
+                    <Box
+                    
+                      h="120px"
+                      p={2}
+                      cursor="pointer"
+                      borderRadius="10px"
+                      fontSize="14px"
+                      boxShadow="lg"
+                      border="lightgray solid 1px"
+                      overflowY="auto"
+                      mb="20px"
+                      key={i}
+                    >
+                      {" "}
+                      <Text key={i} color="useColorModeValue('white','black')">
+                        {d}
+                      </Text>
+                    </Box>
+                  ))}
+            
             </DrawerBody>
 
-            <DrawerFooter></DrawerFooter>
+            
           </DrawerContent>
         </DrawerOverlay>
       </Drawer>
-      <Container maxW="85%" as={Flex} maxH="lg" >
+      <Container maxW="85%" as={Flex} maxH="lg">
         <Flex
           direction="column"
           py="2"
@@ -237,7 +331,7 @@ function OcrApp() {
 
           <Progress
             m={2}
-            colorScheme="gray"
+            colorScheme="blue"
             size="lg"
             borderRadius="50px"
             value={progress}
@@ -251,41 +345,62 @@ function OcrApp() {
             h="80px"
             bg={useColorModeValue("gray.900", "gray.700")}
           >
-            <RadioGroup
-              defaultValue="eng"
-              color={useColorModeValue("white")}
-              w="100%"
+            <Popover
+              returnFocusOnClose={false}
+              isOpen={selectLng}
+              onClose={closelng}
+              placement="right-start"
+              closeOnBlur={true}
+              
             >
-              <Flex direction="row">
-                <Radio
-                  justifyContent="center"
-                  colorScheme="green"
-                  w="33.3333%"
-                  value="eng"
-                  onChange={(e) => setLang(e.target.value)}
+              <PopoverTrigger>
+                <RadioGroup
+                  defaultValue="eng"
+                  color={useColorModeValue("white")}
+                  w="100%"
                 >
-                  English
-                </Radio>
-                <Radio
-                  w="33.3333%"
-                  colorScheme="green"
-                  justifyContent="center"
-                  value="hin"
-                  onChange={(e) => setLang(e.target.value)}
-                >
-                  Hindi
-                </Radio>
-                <Radio
-                  w="33.3333%"
-                  justifyContent="center"
-                  colorScheme="green"
-                  value="mar"
-                  onChange={(e) => setLang(e.target.value)}
-                >
-                  Marathi
-                </Radio>
-              </Flex>
-            </RadioGroup>
+                  <Flex direction="row">
+                    <Radio
+                      justifyContent="center"
+                      colorScheme="green"
+                      w="33.3333%"
+                      value="eng"
+                      onChange={(e) => setLang(e.target.value)}
+                    >
+                      English
+                    </Radio>
+                    <Radio
+                      w="33.3333%"
+                      colorScheme="green"
+                      justifyContent="center"
+                      value="hin"
+                      onChange={(e) => setLang(e.target.value)}
+                    >
+                      Hindi
+                    </Radio>
+                    <Radio
+                      w="33.3333%"
+                      justifyContent="center"
+                      colorScheme="green"
+                      value="mar"
+                      onChange={(e) => setLang(e.target.value)}
+                    >
+                      Marathi
+                    </Radio>
+                  </Flex>
+                </RadioGroup>
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverHeader fontWeight="semibold">
+                  Hey {currentUser && currentUser.email}
+                </PopoverHeader>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverBody>
+                  Select the Language that File cantains!
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
           </Box>
         </Flex>
 
@@ -300,27 +415,26 @@ function OcrApp() {
           bg={useColorModeValue("white", "black")}
           position="relative"
         >
-          <Box w="100%"
+          <Box
+            w="100%"
             overflowY="auto"
             css={{
-              '&::-webkit-scrollbar': {
-                
-                backgroundColor: useColorModeValue("gray","black"),
+              "&::-webkit-scrollbar": {
+                backgroundColor: useColorModeValue("gray", "black"),
                 borderRadius: "10px",
-                width: '8px'
+                width: "8px",
               },
-              '&::-webkit-scrollbar-track': {
+              "&::-webkit-scrollbar-track": {
                 shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
                 borderRadius: "10px",
-                backgroundColor: useColorModeValue("gray.900","gray")
+                backgroundColor: useColorModeValue("gray.900", "gray"),
               },
-              '&::-webkit-scrollbar-thumb': {
+              "&::-webkit-scrollbar-thumb": {
                 borderRadius: "10px",
                 shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
-                backgroundColor: useColorModeValue("black","white")
-              }
+                backgroundColor: useColorModeValue("black", "white"),
+              },
             }}
-          
           >
             <Text p={4}>{ocr}</Text>
           </Box>
@@ -340,7 +454,7 @@ function OcrApp() {
             <Icon fontSize="25px" as={MdFileDownload} />
           </Box>
           <Box
-            onClick={handlecopytoClip}
+            onClick={copyIt}
             cursor="pointer"
             boxShadow="dark-lg"
             as={Circle}
@@ -355,21 +469,39 @@ function OcrApp() {
           </Box>
 
           {currentUser && (
-            <Box
-              onClick={onOpen}
-              ref={btnRef}
-              cursor="pointer"
-              boxShadow="dark-lg"
-              as={Circle}
-              position="absolute"
-              bottom="155px"
-              right="-60px"
-              size="50px"
-              bg={bgColor}
-              color="white"
+            <Popover
+              returnFocusOnClose={false}
+              isOpen={isOpenpop}
+              onClose={close}
+              placement="auto-end"
+              closeOnBlur={false}
             >
-              <Icon fontSize="20px" as={MdHistory} />
-            </Box>
+              <PopoverTrigger>
+                <Box
+                  onClick={onOpen}
+                  ref={btnRef}
+                  cursor="pointer"
+                  boxShadow="dark-lg"
+                  as={Circle}
+                  position="absolute"
+                  bottom="155px"
+                  right="-60px"
+                  size="50px"
+                  bg={bgColor}
+                  color="white"
+                >
+                  <Icon fontSize="20px" as={MdHistory} />
+                </Box>
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverHeader fontWeight="semibold">
+                  Hey {currentUser.email}
+                </PopoverHeader>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverBody>Check your OCR History Here!</PopoverBody>
+              </PopoverContent>
+            </Popover>
           )}
         </Flex>
       </Container>

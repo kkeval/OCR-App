@@ -10,19 +10,18 @@ import {
   AlertIcon,
 } from "@chakra-ui/react";
 import * as React from "react";
-
 import { useAuth } from "../../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useState, useRef } from "react";
+import { database } from "../../firebase";
+import { useState, useRef,useEffect } from "react";
 
 export default function SignUpForm() {
   const emailRef = useRef();
   const passRef = useRef();
   const passConRef = useRef();
-  const { signup } = useAuth();
-
+  const { signup,currentUser } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useHistory();
@@ -37,15 +36,33 @@ export default function SignUpForm() {
     try {
       setError("");
       setLoading(true);
-      await signup(emailRef.current.value, passRef.current.value);
-      setError("Failed to Create Account!");
-      notifySuc();
+      await signup(emailRef.current.value, passRef.current.value).then(cred => {
+        // database.ocrdata.doc(cred.)
+        database.ocrdata.doc(cred.user.email).set(
+          {
+            email:cred.user.email,
+            createdAt: database.getCurrentTimestamp(),
+            userId:cred.user.uid
+          }
+        )
+      })       
       history.push("/");
+      users();
+      notifySuc();
+
     } catch {
-      notify1();
+      setError("Failed to Create Account!");
     }
     setLoading(false);
   }
+
+function users(){
+  console.log(currentUser.email) 
+  }    
+
+
+
+    
   return (
     <>
       <ToastContainer

@@ -1,7 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
-    
 
 const app = firebase.initializeApp({
     
@@ -14,9 +13,18 @@ const app = firebase.initializeApp({
     measurementId:  process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 
 })
+
 const firestore = app.firestore() 
 export const database = {
-    ocrdata: firestore.collection("alldata")
+  
+    // files : firebase.collection('Files');
+    ocrdata: firestore.collection("users"),
+    formatDoc : doc =>{
+        return {
+            id:doc.id,...doc.data()
+        }
+    },
+    getCurrentTimestamp:firebase.firestore.FieldValue.serverTimestamp
 }
 
 export const auth = app.auth()

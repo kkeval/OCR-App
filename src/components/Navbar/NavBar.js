@@ -1,5 +1,5 @@
 import { useAuth } from "../../contexts/AuthContext";
-import { Link as ReLink } from "react-router-dom"
+import { Link as ReLink } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import {
   Box,
@@ -8,13 +8,15 @@ import {
   Text,
   Flex,
   Spacer,
-  Heading
+  Heading,
 } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "../../ColorModeSwitcher";
 import Profile from "./Profile";
+import { useEffect, useState } from "react";
 
 export default function NavBar() {
-  const {currentUser} = useAuth();
+  const { currentUser } = useAuth();
+
   return (
     <Flex
       w="100%"
@@ -33,39 +35,41 @@ export default function NavBar() {
         pauseOnFocusLoss
         draggable
         pauseOnHover={false}
-      />      
+      />
       <Heading
-       
         as={ReLink}
         to="/"
-        style={{ fontFamily: "'Press Start 2P' ",  textDecoration: "none"}}
+        style={{ fontFamily: "'Press Start 2P' ", textDecoration: "none" }}
         ml="20px"
         fontWeight="bold"
         fontSize="45px"
         bgGradient="linear(to-r, #7928CA,#FF0080)"
         bgClip="text"
-      >OCR APP
+      >
+        OCR APP
       </Heading>
       <Spacer />
       {!currentUser && (
         <Box>
-          <Link style={{ textDecoration: "none" }} as={ReLink} to="/signup">
-            <Button colorScheme="light" variant="ghost" mr="2" fontSize="lg">
+          <Button colorScheme="light" variant="ghost" mr="2" fontSize="lg">
+            <Text as={ReLink} style={{ textDecoration: "none" }} as={ReLink} to="/signup">
               Sign Up
-            </Button>
-          </Link>
-          <Link style={{ textDecoration: "none" }} as={ReLink} to="/login">
+            </Text>
+          </Button>
+
+     
             <Button colorScheme="light" variant="ghost" mr="2" fontSize="lg">
+            <Text as={ReLink} style={{ textDecoration: "none" }}  to="/login">
               Login
+              </Text>
             </Button>
-          </Link>
+       
         </Box>
       )}
       {currentUser && (
         <>
           <Text mr="20px" fontSize="sm" color="gray.400">
-            {" "}
-            {currentUser.email}{" "}
+            {currentUser.email}
           </Text>
           <Profile />
         </>

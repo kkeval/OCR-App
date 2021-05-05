@@ -21,10 +21,9 @@ function App() {
             boxShadow: "none",
           },
         },
-      },
+      },    
     },
   });
-
   return (
     <AuthProvider>
       <ChakraProvider theme={theme}>
@@ -32,14 +31,16 @@ function App() {
           <Navbar />
 
           <Switch>
-            
-            <Route  path="/login" component={Login} />
-            <Route  path="/signup" component={SignUp} />
-            <Route  path="/forgot-password" component={ForgotPass} />
-            <PrivateRoute exact path="/update-profile" component={UpdateProfile} />
+            <Route path="/login" component={Login} />
+            <Route path="/signup" component={SignUp} />
+            <Route path="/forgot-password" component={ForgotPass} />
+            <PrivateRoute
+              exact
+              path="/update-profile"
+              component={UpdateProfile}
+            />
             <Route exact path="/" component={OcrApp} />
-            <Route component={NotFound}/>
-          
+            <Route component={NotFound} />
           </Switch>
         </Router>
       </ChakraProvider>

@@ -15,6 +15,7 @@ import { Card } from "./Card";
 import LoginForm from "./LoginForm";
 import { Link as ReLink } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import { database } from "../../firebase";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -26,7 +27,16 @@ export default function Login() {
   async function handleGooleLogin(e) {
     e.preventDefault();
     try {
-      await signGoogle();
+      await signGoogle().then(cred => {
+        // database.ocrdata.doc(cred.)
+        database.ocrdata.doc(cred.user.email).set(
+          {
+            email:cred.user.email,
+            createdAt: database.getCurrentTimestamp(),
+            userId:cred.user.uid
+          }
+        )
+      })     
       notifySuc();
       history.push("/");
     } catch {
@@ -40,8 +50,10 @@ export default function Login() {
         Login in to your account
       </Heading>
 
-      <Link as={ReLink} to="/signup" style={{ textDecoration: "none" }}>
+      <Box as={ReLink}
+        to="/signup">
         <Text
+        
           mt="2"
           mb="5"
           align="center"
@@ -49,10 +61,11 @@ export default function Login() {
           maxW="md"
           fontWeight="medium"
         >
-          {" "}
           Don&apos;t have an account?{" "}
         </Text>
-      </Link>
+      </Box>
+        
+
 
       <Card boxShadow="dark-lg">
         <LoginForm />

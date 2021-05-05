@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
-import { auth } from "../firebase.js";
+import { auth,database } from "../firebase.js";
 import firebase from "firebase/app";
+import NavBar from "../components/Navbar/NavBar.js";
 
 const AuthContext = React.createContext();
 
@@ -44,9 +45,14 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user)
+     
+
+      
+
+      // }  
       setloading(false)
     })
-    return ()=> unsubscribe 
+    return unsubscribe 
   }, [ ]);
 
   const value = {

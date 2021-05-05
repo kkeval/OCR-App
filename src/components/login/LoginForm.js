@@ -17,8 +17,11 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useState, useRef } from "react";
+import { useState, useRef,useEffect } from "react";
 import { Link as ReLink } from "react-router-dom";
+import { database } from "../../firebase";
+import "firebase/auth";
+import "firebase/firestore";
 
 export default function LoginForm() {
   const emailRef = useRef();
@@ -31,7 +34,7 @@ export default function LoginForm() {
   const notifySuc = () => toast.success("Succsessfully Logged In");
 
   async function handleSubmit(e) {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
       setError("");
@@ -43,7 +46,14 @@ export default function LoginForm() {
       setError("Password or Email is Wrong!");
     }
     setLoading(false);
+
+
+    
   }
+
+
+
+
   return (
     <>
       <chakra.form onSubmit={handleSubmit}>
