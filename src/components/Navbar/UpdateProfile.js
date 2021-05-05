@@ -61,9 +61,9 @@ export default function UpdateProfile() {
   return (
     <>
     
-    <Box maxW="md" mx="auto" >
+    <Box  maxW={{base:"90%",md:"450px"}} mx="auto">
 
-<Heading textAlign="center" size="xl" mb={10} fontWeight="extrabold">
+<Heading textAlign="center" fontSize={{base:"30px",md:"40px"}} mb={10} fontWeight="extrabold">
         Update Profile
       </Heading>
     <Card>
