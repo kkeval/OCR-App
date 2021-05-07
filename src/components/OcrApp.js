@@ -84,7 +84,7 @@ function OcrApp() {
       setOcr(text);
     } catch {
       return toast({
-        position: { base: "top-left", md: "top" },
+        position:  "top",
         title: "There a error",
         status: "error",
         isClosable: true,
@@ -158,12 +158,11 @@ function OcrApp() {
 
   const copyIt = () => {
     navigator.clipboard.writeText(ocr);
-    toast({
-      position: { base: "top-left", md: "top" },
+    return toast({
+      position:"top",
       title: "Copied",
       status: "success",
       duration: 9000,
-
       isClosable: true,
     });
   };
