@@ -15,8 +15,6 @@ import {
 import * as React from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useState, useRef,useEffect } from "react";
 import { Link as ReLink } from "react-router-dom";
 import { database } from "../../firebase";
@@ -31,7 +29,7 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const history = useHistory();
 
-  const notifySuc = () => toast.success("Succsessfully Logged In");
+
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -41,7 +39,7 @@ export default function LoginForm() {
       setLoading(true);
       await login(emailRef.current.value, passRef.current.value);
       history.push("/");
-      notifySuc();
+      console.log("Logged in")
     } catch {
       setError("Password or Email is Wrong!");
     }

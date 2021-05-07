@@ -16,13 +16,10 @@ import LoginForm from "./LoginForm";
 import { Link as ReLink } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { database } from "../../firebase";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 
 export default function Login() {
   const history = useHistory();
-  const notifySuc = () => toast.success(error);
-  const notifyFailed = () => toast.success(error);
   const { signGoogle, error } = useAuth();
   async function handleGooleLogin(e) {
     e.preventDefault();
@@ -37,10 +34,10 @@ export default function Login() {
           }
         )
       })     
-      notifySuc();
+      console.log("singed in")
       history.push("/");
     } catch {
-      notifyFailed();
+      console.log("theres a error")
     }
   }
 

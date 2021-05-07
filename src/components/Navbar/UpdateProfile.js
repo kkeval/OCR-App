@@ -14,7 +14,6 @@ import {
 import * as React from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
 import { useState, useRef } from "react";
 import { Card } from "../login/Card";
 

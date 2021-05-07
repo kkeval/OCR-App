@@ -21,6 +21,7 @@ import {
   DrawerBody,
   DrawerFooter,
   DrawerHeader,
+  Select,
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
@@ -44,7 +45,6 @@ import { createWorker } from "tesseract.js";
 import { jsPDF } from "jspdf";
 import { useAuth } from "../contexts/AuthContext";
 import { useColorModeValue } from "@chakra-ui/react";
-import "react-toastify/dist/ReactToastify.css";
 import { database } from "../firebase";
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -84,10 +84,9 @@ function OcrApp() {
       setOcr(text);
     } catch {
       return toast({
-        position: "top",
+        position: { base: "top-left", md: "top" },
         title: "There a error",
         status: "error",
-        duration: 9000,
         isClosable: true,
       });
     }
@@ -123,9 +122,8 @@ function OcrApp() {
   useEffect(() => {
     if (file !== null) {
       setSelectLng(!selectLng);
-    }
-    else{
-      return
+    } else {
+      return;
     }
   }, [file]);
 
@@ -161,7 +159,7 @@ function OcrApp() {
   const copyIt = () => {
     navigator.clipboard.writeText(ocr);
     toast({
-      position: "top",
+      position: { base: "top-left", md: "top" },
       title: "Copied",
       status: "success",
       duration: 9000,
@@ -230,7 +228,6 @@ function OcrApp() {
         placement="right"
         onClose={onClose}
         finalFocusRef={btnRef}
-       
       >
         <DrawerOverlay>
           <DrawerContent>
@@ -239,44 +236,42 @@ function OcrApp() {
               <Heading>History</Heading>{" "}
             </DrawerHeader>
 
-            <DrawerBody
-            
-            
-            >
+            <DrawerBody>
               <Text color={useColorModeValue("gray")} mb="10px">
                 {currentUser && currentUser.email}
               </Text>
-              
-                {fdata &&
-                  fdata.length > 0 &&
-                  fdata.map((d, i) => (
-                    <Box
-                    
-                      h="120px"
-                      p={2}
-                      cursor="pointer"
-                      borderRadius="10px"
-                      fontSize="14px"
-                      boxShadow="lg"
-                      border="lightgray solid 1px"
-                      overflowY="auto"
-                      mb="20px"
-                      key={i}
-                    >
-                      {" "}
-                      <Text key={i} color="useColorModeValue('white','black')">
-                        {d}
-                      </Text>
-                    </Box>
-                  ))}
-            
-            </DrawerBody>
 
-            
+              {fdata &&
+                fdata.length > 0 &&
+                fdata.map((d, i) => (
+                  <Box
+                    h="120px"
+                    p={2}
+                    cursor="pointer"
+                    borderRadius="10px"
+                    fontSize="14px"
+                    boxShadow="lg"
+                    border="lightgray solid 1px"
+                    overflowY="auto"
+                    mb="20px"
+                    key={i}
+                  >
+                    {" "}
+                    <Text key={i} color="useColorModeValue('white','black')">
+                      {d}
+                    </Text>
+                  </Box>
+                ))}
+            </DrawerBody>
           </DrawerContent>
         </DrawerOverlay>
       </Drawer>
-      <Container maxW="85%" as={Flex} maxH="lg">
+      <Container
+        maxW={{ base: "90%", md: "85%" }}
+        direction={{ base: "column", md: "row" }}
+        as={Flex}
+        h={{ base: "300px", md: "500px" }}
+      >
         <Flex
           direction="column"
           py="2"
@@ -288,6 +283,7 @@ function OcrApp() {
           borderRadius="20px"
           w="100%"
           mr="50px"
+          mb="10px"
           bg={useColorModeValue("white", "black")}
         >
           <Box
@@ -296,19 +292,20 @@ function OcrApp() {
             boxShadow="dark-lg"
             as={Circle}
             position="absolute"
-            top="200px"
-            right="-70px"
-            size="90px"
+            top={{ md: "200px" }}
+            right={{ base: "18px", md: "-70px" }}
+            size={{ base: "45px", md: "90px" }}
+            bottom={{ base: "2.5" }}
             bg={useColorModeValue("gray.900", "gray.700")}
             color="white"
             zIndex="4"
           >
-            <Icon fontSize="40px" as={MdCheck} />
+            <Icon fontSize={{ base: "25px", md: "40px" }} as={MdCheck} />
           </Box>
-          <Center mt={2}>
+          <Center mt={1}>
             <Box>
               <Input
-                h="50px"
+                fontSize={{ base: "10px", md: "15px" }}
                 ref={fileRef}
                 type="file"
                 variant="ghost"
@@ -317,11 +314,10 @@ function OcrApp() {
               />
             </Box>
           </Center>
-          <Box as={Center} w="100%" h="300px">
+          <Box as={Center} w="100%" h={{ base: "160px", md: "300px" }}>
             <Image
               p={2}
-              maxW="100%"
-              maxH="80%"
+              maxH={{ base: "60%", md: "80%" }}
               src={file ? URL.createObjectURL(file) : null}
               alt={file ? file.name : null}
             ></Image>
@@ -341,29 +337,69 @@ function OcrApp() {
             as={Center}
             boxShadow="dark-lg"
             borderRadius="15px"
-            w="100%"
-            h="80px"
+            w={{ base: "70%", md: "100%" }}
+            h={{ base: "50px", md: "80px" }}
+            ml={{ base: "10px", md: "0px" }}
             bg={useColorModeValue("gray.900", "gray.700")}
           >
+            <Box
+              visibility={{ base: "visible", md: "hidden" }}
+              color={useColorModeValue("white", "white")}
+            >
+              <Select
+                variant="unstyled"
+                placeholder="Select option"
+                color={useColorModeValue("white", "white")}
+                w={{ base: "200px", md: "0px" }}
+                onChange={(e) =>setLang(e.target.value)}
+              >
+                <option
+                  visibility={{ base: "visible", md: "hidden" }}
+                  value="hin"
+                  
+                
+                >
+                  Hindi
+                </option>
+                <option
+                selected="selected"
+                  visibility={{ base: "visible", md: "hidden" }}
+                  value="eng"
+                  defaultValue
+                >
+                 English
+                </option>
+                <option
+                  visibility={{ base: "visible", md: "hidden" }}
+                  value="mar"
+           
+                >
+                 Marathi
+                </option>
+              </Select>
+            </Box>
+
             <Popover
               returnFocusOnClose={false}
               isOpen={selectLng}
               onClose={closelng}
-              placement="right-start"
+              placement="auto-start"
               closeOnBlur={true}
-              
+              preventOverflow={true}
+              visibility={{ base: "hidden", md: "visible" }}
             >
               <PopoverTrigger>
                 <RadioGroup
                   defaultValue="eng"
                   color={useColorModeValue("white")}
-                  w="100%"
+                  w={{ base: "0", md: "100%" }}
+                  visibility={{ base: "hidden", md: "visible" }}
                 >
-                  <Flex direction="row">
+                  <Flex direction={{ md: "row" }}>
                     <Radio
                       justifyContent="center"
                       colorScheme="green"
-                      w="33.3333%"
+                      w={{base:"0%",md:"33.3333%"}}
                       value="eng"
                       onChange={(e) => setLang(e.target.value)}
                     >
@@ -409,14 +445,14 @@ function OcrApp() {
           px={{
             md: "2",
           }}
+          w="100%"
           boxShadow="dark-lg"
           borderRadius="20px"
-          w="100%"
           bg={useColorModeValue("white", "black")}
           position="relative"
         >
           <Box
-            w="100%"
+            h={{ base: "250px" }}
             overflowY="auto"
             css={{
               "&::-webkit-scrollbar": {
@@ -436,7 +472,7 @@ function OcrApp() {
               },
             }}
           >
-            <Text p={4}>{ocr}</Text>
+            <Text fontSize={{base:"13px",md:"18px"}} p={4}>{ocr}</Text>
           </Box>
 
           <Box
@@ -445,9 +481,9 @@ function OcrApp() {
             boxShadow="dark-lg"
             as={Circle}
             position="absolute"
-            bottom="5px"
-            right="-60px"
-            size="50px"
+            bottom={{ base: "-50px", md: "5px" }}
+            right={{ base: "60px", md: "-60px" }}
+            size={{base:"45px",md:"50px"}}
             bg={useColorModeValue("gray.900", "gray.700")}
             color="white"
           >
@@ -459,9 +495,9 @@ function OcrApp() {
             boxShadow="dark-lg"
             as={Circle}
             position="absolute"
-            bottom="80px"
-            right="-60px"
-            size="50px"
+            bottom={{ base: "-50px", md: "80px" }}
+            right={{ base: "0px", md: "-60px" }}
+            size={{base:"45px",md:"50px"}}
             bg={useColorModeValue("gray.900", "gray.700")}
             color="white"
           >
@@ -475,6 +511,8 @@ function OcrApp() {
               onClose={close}
               placement="auto-end"
               closeOnBlur={false}
+              preventOverflow={true}
+              visibility={{ base: "hidden", md: "visible" }}
             >
               <PopoverTrigger>
                 <Box
@@ -484,9 +522,9 @@ function OcrApp() {
                   boxShadow="dark-lg"
                   as={Circle}
                   position="absolute"
-                  bottom="155px"
-                  right="-60px"
-                  size="50px"
+                  bottom={{ base: "-50px",md:"155px"}}
+                  right={{base:"120px",md:"-60px"}}
+                  size={{base:"45px",md:"50px"}}
                   bg={bgColor}
                   color="white"
                 >

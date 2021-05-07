@@ -12,21 +12,18 @@ import {
 import * as React from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 import { database } from "../../firebase";
-import { useState, useRef,useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function SignUpForm() {
   const emailRef = useRef();
   const passRef = useRef();
   const passConRef = useRef();
-  const { signup,currentUser } = useAuth();
+  const { signup, currentUser } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useHistory();
-  const notify1 = () => toast.error("Failed to create");
-  const notifySuc = () => toast.success("Succsess");
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -36,46 +33,31 @@ export default function SignUpForm() {
     try {
       setError("");
       setLoading(true);
-      await signup(emailRef.current.value, passRef.current.value).then(cred => {
-        // database.ocrdata.doc(cred.)
-        database.ocrdata.doc(cred.user.email).set(
-          {
-            email:cred.user.email,
+      await signup(emailRef.current.value, passRef.current.value).then(
+        (cred) => {
+          // database.ocrdata.doc(cred.)
+          database.ocrdata.doc(cred.user.email).set({
+            email: cred.user.email,
             createdAt: database.getCurrentTimestamp(),
-            userId:cred.user.uid
-          }
-        )
-      })       
+            userId: cred.user.uid,
+          });
+        }
+      );
       history.push("/");
       users();
-      notifySuc();
-
+      console.log("signed up");
     } catch {
       setError("Failed to Create Account!");
     }
     setLoading(false);
   }
 
-function users(){
-  console.log(currentUser.email) 
-  }    
+  function users() {
+    console.log(currentUser.email);
+  }
 
-
-
-    
   return (
     <>
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover={false}
-      />
       <chakra.form onSubmit={handleSubmit}>
         <FormControl>
           <Stack spacing="3">
@@ -87,13 +69,7 @@ function users(){
             )}
             <Box>
               <FormLabel>Email address</FormLabel>
-              <Input
-                name="email"
-                type="email"
-                ref={emailRef}
-               
-                required
-              />
+              <Input name="email" type="email" ref={emailRef} required />
             </Box>
             <Box>
               <FormLabel>Password</FormLabel>
