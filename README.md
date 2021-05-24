@@ -5,7 +5,6 @@
 
 
 
-## Check this App Live Here  : https://ocr-app-react.netlify.app/
 
 
 
