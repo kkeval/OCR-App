@@ -61,6 +61,11 @@ function OcrApp() {
   const [selectLng, setSelectLng] = useState(false);
   const close = () => setIsOpen(false);
   const closelng = () => setSelectLng(false);
+  const some = useColorModeValue("gray", "black")
+  const some2 = useColorModeValue("gray.900", "gray")
+  const some3 = useColorModeValue("black", "white")
+  
+
 
   const toast = useToast();
   const [progress, setProgress] = useState("0");
@@ -79,12 +84,12 @@ function OcrApp() {
       await worker.loadLanguage(lang);
       await worker.initialize(lang);
       const {
-        data: { text },
+        /*  */ data: { text },
       } = await worker.recognize(file);
       setOcr(text);
     } catch {
       return toast({
-        position:  "top",
+        position: "top",
         title: "There a error",
         status: "error",
         isClosable: true,
@@ -108,13 +113,14 @@ function OcrApp() {
   };
 
   useEffect(() => {
-    if (currentUser == null) {
+    if (currentUser == null  ) {
       return;
     } else {
       const updateRef = database.ocrdata.doc(currentUser.email);
       updateRef.onSnapshot((doc) => {
+       
         setFdata(Object.values(doc.data().userocrData));
-        console.log("Current data: ", Object.values(doc.data().userocrData));
+        // console.log("Current data: ", Object.values(doc.data().userocrData));
       });
     }
   }, []);
@@ -159,7 +165,7 @@ function OcrApp() {
   const copyIt = () => {
     navigator.clipboard.writeText(ocr);
     return toast({
-      position:"top",
+      position: "top",
       title: "Copied",
       status: "success",
       duration: 9000,
@@ -220,6 +226,14 @@ function OcrApp() {
     }
   };
 
+
+  const hnadleClickPastOcr = () =>{
+
+    setOcr()
+
+  }
+
+
   return (
     <>
       <Drawer
@@ -235,11 +249,34 @@ function OcrApp() {
               <Heading>History</Heading>{" "}
             </DrawerHeader>
 
-            <DrawerBody>
+            <DrawerBody
+             css={{
+              "&::-webkit-scrollbar": {
+                backgroundColor: some,
+                borderRadius: "10px",
+                width: "8px",
+              },
+              "&::-webkit-scrollbar-track": {
+                shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
+                borderRadius: "10px",
+                backgroundColor: some2,
+              },
+              "&::-webkit-scrollbar-thumb": {
+                borderRadius: "10px",
+                shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
+                backgroundColor: some3,
+              },
+            }}
+            >
               <Text color={useColorModeValue("gray")} mb="10px">
                 {currentUser && currentUser.email}
               </Text>
 
+              <Flex
+              
+              flexDirection="column-reverse"
+              >
+                
               {fdata &&
                 fdata.length > 0 &&
                 fdata.map((d, i) => (
@@ -254,6 +291,23 @@ function OcrApp() {
                     overflowY="auto"
                     mb="20px"
                     key={i}
+                    css={{
+                      "&::-webkit-scrollbar": {
+                        backgroundColor: some,
+                        borderRadius: "10px",
+                        width: "8px",
+                      },
+                      "&::-webkit-scrollbar-track": {
+                        shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
+                        borderRadius: "10px",
+                        backgroundColor: some2,
+                      },
+                      "&::-webkit-scrollbar-thumb": {
+                        borderRadius: "10px",
+                        shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
+                        backgroundColor:some3,
+                      },
+                    }}
                   >
                     {" "}
                     <Text key={i} color="useColorModeValue('white','black')">
@@ -261,6 +315,9 @@ function OcrApp() {
                     </Text>
                   </Box>
                 ))}
+
+              </Flex>
+
             </DrawerBody>
           </DrawerContent>
         </DrawerOverlay>
@@ -350,30 +407,27 @@ function OcrApp() {
                 placeholder="Select option"
                 color={useColorModeValue("white", "white")}
                 w={{ base: "200px", md: "0px" }}
-                onChange={(e) =>setLang(e.target.value)}
+                onChange={(e) => setLang(e.target.value)}
               >
                 <option
                   visibility={{ base: "visible", md: "hidden" }}
                   value="hin"
-                  
-                
                 >
                   Hindi
                 </option>
                 <option
-                selected="selected"
+                  selected="selected"
                   visibility={{ base: "visible", md: "hidden" }}
                   value="eng"
                   defaultValue
                 >
-                 English
+                  English
                 </option>
                 <option
                   visibility={{ base: "visible", md: "hidden" }}
                   value="mar"
-           
                 >
-                 Marathi
+                  Marathi
                 </option>
               </Select>
             </Box>
@@ -398,7 +452,7 @@ function OcrApp() {
                     <Radio
                       justifyContent="center"
                       colorScheme="green"
-                      w={{base:"0%",md:"33.3333%"}}
+                      w={{ base: "0%", md: "33.3333%" }}
                       value="eng"
                       onChange={(e) => setLang(e.target.value)}
                     >
@@ -451,7 +505,7 @@ function OcrApp() {
           position="relative"
         >
           <Box
-            h={{ base: "250px" }}
+            h={{ base: "250px", md: "480px" }}
             overflowY="auto"
             css={{
               "&::-webkit-scrollbar": {
@@ -471,7 +525,9 @@ function OcrApp() {
               },
             }}
           >
-            <Text fontSize={{base:"13px",md:"18px"}} p={4}>{ocr}</Text>
+            <Text fontSize={{ base: "13px", md: "18px" }} p={4}>
+              {ocr}
+            </Text>
           </Box>
 
           <Box
@@ -482,7 +538,7 @@ function OcrApp() {
             position="absolute"
             bottom={{ base: "-50px", md: "5px" }}
             right={{ base: "60px", md: "-60px" }}
-            size={{base:"45px",md:"50px"}}
+            size={{ base: "45px", md: "50px" }}
             bg={useColorModeValue("gray.900", "gray.700")}
             color="white"
           >
@@ -496,7 +552,7 @@ function OcrApp() {
             position="absolute"
             bottom={{ base: "-50px", md: "80px" }}
             right={{ base: "0px", md: "-60px" }}
-            size={{base:"45px",md:"50px"}}
+            size={{ base: "45px", md: "50px" }}
             bg={useColorModeValue("gray.900", "gray.700")}
             color="white"
           >
@@ -521,9 +577,9 @@ function OcrApp() {
                   boxShadow="dark-lg"
                   as={Circle}
                   position="absolute"
-                  bottom={{ base: "-50px",md:"155px"}}
-                  right={{base:"120px",md:"-60px"}}
-                  size={{base:"45px",md:"50px"}}
+                  bottom={{ base: "-50px", md: "155px" }}
+                  right={{ base: "120px", md: "-60px" }}
+                  size={{ base: "45px", md: "50px" }}
                   bg={bgColor}
                   color="white"
                 >

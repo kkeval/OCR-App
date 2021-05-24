@@ -19,7 +19,7 @@ export default function NavBar() {
         to="/"
         style={{ fontFamily: "'Press Start 2P' ", textDecoration: "none" }}
         ml="20px"
-        fontWeight="bold"
+        fontWeight="extrabold"
         fontSize={{ base: "20px", md: "45px", lg: "50px" }}
         bgGradient="linear(to-r, #7928CA,#FF0080)"
         bgClip="text"

@@ -17,43 +17,42 @@ import { Link as ReLink } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { database } from "../../firebase";
 
-
 export default function Login() {
   const history = useHistory();
   const { signGoogle, error } = useAuth();
   async function handleGooleLogin(e) {
     e.preventDefault();
     try {
-      await signGoogle().then(cred => {
+      await signGoogle().then((cred) => {
         // database.ocrdata.doc(cred.)
-        database.ocrdata.doc(cred.user.email).set(
-          {
-            email:cred.user.email,
-            createdAt: database.getCurrentTimestamp(),
-            userId:cred.user.uid
-          }
-        )
-      })     
-      console.log("singed in")
+        database.ocrdata.doc(cred.user.email).set({
+          email: cred.user.email,
+          createdAt: database.getCurrentTimestamp(),
+          userId: cred.user.uid,
+        });
+      });
+      console.log("singed in");
       history.push("/");
     } catch {
-      console.log("theres a error")
+      console.log("theres a error");
     }
   }
 
   return (
-    <Box maxW={{base:"90%",md:"450px"}} mx="auto">
-      <Heading textAlign="center" fontSize={{base:"30px",md:"40px"}} fontWeight="extrabold">
+    <Box maxW={{ base: "90%", md: "450px" }} mx="auto">
+      <Heading
+        textAlign="center"
+        fontSize={{ base: "30px", md: "40px" }}
+        fontWeight="extrabold"
+      >
         Login in Here
       </Heading>
 
-      <Box as={ReLink}
-        to="/signup">
+      <Box as={ReLink} to="/signup">
         <Text
-        
           mt="2"
           mb="5"
-          fontSize={{base:"sm",md:"18px"}}
+          fontSize={{ base: "sm", md: "18px" }}
           textAlign="center"
           color={useColorModeValue("blue.500", "blue.200")}
           maxW="100%"
@@ -62,8 +61,6 @@ export default function Login() {
           Don&apos;t have an account?{" "}
         </Text>
       </Box>
-        
-
 
       <Card boxShadow="dark-lg">
         <LoginForm />
