@@ -1,9 +1,6 @@
 {
   "short_name": "OCR App",
   "name": "OCR App",
-  "icons": [
-   
-  ],
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
