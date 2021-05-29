@@ -29,7 +29,7 @@ export default function Login() {
           email: cred.user.email,
           createdAt: database.getCurrentTimestamp(),
           userId: cred.user.uid,
-        });
+        },{merge:true});
       });
       console.log("singed in");
       history.push("/");

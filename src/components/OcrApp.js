@@ -118,10 +118,17 @@ function OcrApp() {
     } else {
       const updateRef = database.ocrdata.doc(currentUser.email);
       updateRef.onSnapshot((doc) => {
-       
+        
+       if(doc.data().userocrData == null){
+        return
+       }else{
         setFdata(Object.values(doc.data().userocrData));
+       }
+       
         // console.log("Current data: ", Object.values(doc.data().userocrData));
-      });
+      }
+      
+      );
     }
   }, []);
 
