@@ -32,6 +32,7 @@ import {
   PopoverHeader,
   PopoverBody,
   PopoverFooter,
+  Link,
   PopoverArrow,
   PopoverCloseButton,
 } from "@chakra-ui/react";
@@ -50,6 +51,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 
+
 function OcrApp() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef();
@@ -61,11 +63,9 @@ function OcrApp() {
   const [selectLng, setSelectLng] = useState(false);
   const close = () => setIsOpen(false);
   const closelng = () => setSelectLng(false);
-  const some = useColorModeValue("gray", "black")
-  const some2 = useColorModeValue("gray.900", "gray")
-  const some3 = useColorModeValue("black", "white")
-  
-
+  const some = useColorModeValue("gray", "black");
+  const some2 = useColorModeValue("gray.900", "gray");
+  const some3 = useColorModeValue("black", "white");
 
   const toast = useToast();
   const [progress, setProgress] = useState("0");
@@ -113,22 +113,19 @@ function OcrApp() {
   };
 
   useEffect(() => {
-    if (currentUser == null  ) {
+    if (currentUser == null) {
       return;
     } else {
       const updateRef = database.ocrdata.doc(currentUser.email);
       updateRef.onSnapshot((doc) => {
-        
-       if(doc.data().userocrData == null){
-        return
-       }else{
-        setFdata(Object.values(doc.data().userocrData));
-       }
-       
+        if (doc.data().userocrData == null) {
+          return;
+        } else {
+          setFdata(Object.values(doc.data().userocrData));
+        }
+
         // console.log("Current data: ", Object.values(doc.data().userocrData));
-      }
-      
-      );
+      });
     }
   }, []);
 
@@ -233,13 +230,9 @@ function OcrApp() {
     }
   };
 
-
-  const hnadleClickPastOcr = () =>{
-
-    setOcr()
-
-  }
-
+  const hnadleClickPastOcr = () => {
+    setOcr();
+  };
 
   return (
     <>
@@ -257,74 +250,68 @@ function OcrApp() {
             </DrawerHeader>
 
             <DrawerBody
-             css={{
-              "&::-webkit-scrollbar": {
-                backgroundColor: some,
-                borderRadius: "10px",
-                width: "8px",
-              },
-              "&::-webkit-scrollbar-track": {
-                shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
-                borderRadius: "10px",
-                backgroundColor: some2,
-              },
-              "&::-webkit-scrollbar-thumb": {
-                borderRadius: "10px",
-                shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
-                backgroundColor: some3,
-              },
-            }}
+              css={{
+                "&::-webkit-scrollbar": {
+                  backgroundColor: some,
+                  borderRadius: "10px",
+                  width: "8px",
+                },
+                "&::-webkit-scrollbar-track": {
+                  shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
+                  borderRadius: "10px",
+                  backgroundColor: some2,
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  borderRadius: "10px",
+                  shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
+                  backgroundColor: some3,
+                },
+              }}
             >
               <Text color={useColorModeValue("gray")} mb="10px">
                 {currentUser && currentUser.email}
               </Text>
 
-              <Flex
-              
-              flexDirection="column-reverse"
-              >
-                
-              {fdata &&
-                fdata.length > 0 &&
-                fdata.map((d, i) => (
-                  <Box
-                    h="120px"
-                    p={2}
-                    cursor="pointer"
-                    borderRadius="10px"
-                    fontSize="14px"
-                    boxShadow="lg"
-                    border="lightgray solid 1px"
-                    overflowY="auto"
-                    mb="20px"
-                    key={i}
-                    css={{
-                      "&::-webkit-scrollbar": {
-                        backgroundColor: some,
-                        borderRadius: "10px",
-                        width: "8px",
-                      },
-                      "&::-webkit-scrollbar-track": {
-                        shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
-                        borderRadius: "10px",
-                        backgroundColor: some2,
-                      },
-                      "&::-webkit-scrollbar-thumb": {
-                        borderRadius: "10px",
-                        shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
-                        backgroundColor:some3,
-                      },
-                    }}
-                  >
-                    {" "}
-                    <Text key={i} color="useColorModeValue('white','black')">
-                      {d}
-                    </Text>
-                  </Box>
-                ))}
-
+              <Flex flexDirection="column-reverse">
+                {fdata &&
+                  fdata.length > 0 &&
+                  fdata.map((d, i) => (
+                    <Box
+                      h="120px"
+                      p={2}
+                      cursor="pointer"
+                      borderRadius="10px"
+                      fontSize="14px"
+                      boxShadow="lg"
+                      border="lightgray solid 1px"
+                      overflowY="auto"
+                      mb="20px"
+                      key={i}
+                      css={{
+                        "&::-webkit-scrollbar": {
+                          backgroundColor: some,
+                          borderRadius: "10px",
+                          width: "8px",
+                        },
+                        "&::-webkit-scrollbar-track": {
+                          shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
+                          borderRadius: "10px",
+                          backgroundColor: some2,
+                        },
+                        "&::-webkit-scrollbar-thumb": {
+                          borderRadius: "10px",
+                          shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
+                          backgroundColor: some3,
+                        },
+                      }}
+                    >
+                      {" "}
+                      <Text key={i} color="useColorModeValue('white','black')">
+                        {d}
+                      </Text>
+                    </Box>
+                  ))}
               </Flex>
-
             </DrawerBody>
           </DrawerContent>
         </DrawerOverlay>
@@ -536,7 +523,7 @@ function OcrApp() {
               {ocr}
             </Text>
           </Box>
-
+          
           <Box
             onClick={handleDownload}
             cursor="pointer"
@@ -565,6 +552,7 @@ function OcrApp() {
           >
             <Icon fontSize="20px" as={MdContentCopy} />
           </Box>
+
 
           {currentUser && (
             <Popover
@@ -603,8 +591,21 @@ function OcrApp() {
               </PopoverContent>
             </Popover>
           )}
+
         </Flex>
+        
+       
       </Container>
+      <Box  
+      mt={{base:"335px",md:"40px"}}       
+ as={Center}
+ fontFamily="mono"
+ fontSize={{ base: "12px", md: "15px" }}
+>
+ Made with{" "}
+ <Box fontSize={{ md: "20px", base: "15px" }}> &nbsp;❤️&nbsp; </Box>
+ by&nbsp;<Link color='blue.500' href="https://github.com/kkeval" fontWeight='bold' isExternal >Keval Panchal</Link>
+</Box>
     </>
   );
 }

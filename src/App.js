@@ -7,10 +7,10 @@ import OcrApp from "./components/OcrApp";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar/NavBar";
 import PrivateRoute from "./components/PrivateRoute";
-
 import ForgotPass from "./components/ForgotPass";
 import UpdateProfile from "./components/Navbar/UpdateProfile";
 import NotFound from "./components/NotFound";
+import Footer from "./components/Footer";
 
 function App() {
   const theme = extendTheme({
@@ -40,9 +40,11 @@ function App() {
               component={UpdateProfile}
             />
             <Route exact path="/" component={OcrApp} />
+           
             <Route component={NotFound} />
           </Switch>
         </Router>
+        <Footer/>
       </ChakraProvider>
     </AuthProvider>
   );
