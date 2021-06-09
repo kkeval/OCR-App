@@ -27,6 +27,7 @@ import {
   DrawerCloseButton,
   useDisclosure,
   Popover,
+  Button,
   PopoverTrigger,
   PopoverContent,
   PopoverHeader,
@@ -41,6 +42,8 @@ import {
   MdFileDownload,
   MdContentCopy,
   MdHistory,
+  MdDelete,
+  MdEdit,
 } from "react-icons/md";
 import { createWorker } from "tesseract.js";
 import { jsPDF } from "jspdf";
@@ -50,7 +53,6 @@ import { database } from "../firebase";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-
 
 function OcrApp() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -63,6 +65,7 @@ function OcrApp() {
   const [selectLng, setSelectLng] = useState(false);
   const close = () => setIsOpen(false);
   const closelng = () => setSelectLng(false);
+
   const some = useColorModeValue("gray", "black");
   const some2 = useColorModeValue("gray.900", "gray");
   const some3 = useColorModeValue("black", "white");
@@ -72,6 +75,7 @@ function OcrApp() {
   const fileRef = useRef();
   const { currentUser } = useAuth();
 
+  const bgColor2 = useColorModeValue("gray.900", "blue.600");
   const bgColor = useColorModeValue("gray.900", "gray.700");
 
   const worker = createWorker({
@@ -123,7 +127,7 @@ function OcrApp() {
         } else {
           setFdata(Object.values(doc.data().userocrData));
         }
-
+        // console.log(fdata)
         // console.log("Current data: ", Object.values(doc.data().userocrData));
       });
     }
@@ -158,14 +162,6 @@ function OcrApp() {
     }
   }, [ocr, currentUser, database]);
 
-  // const userocrData =  fdata.length ?  (
-  //   Object.values(fdata).map((data ,i) => {
-  //     return(
-
-  //     )
-  //   })
-  // ) : (<Heading> None Data </Heading>)
-
   const copyIt = () => {
     navigator.clipboard.writeText(ocr);
     return toast({
@@ -176,19 +172,6 @@ function OcrApp() {
       isClosable: true,
     });
   };
-
-  // function ReadtocrData() {
-  //   var updateArrayRef = database.ocrdata.doc(currentUser.email);
-  //   updateArrayRef.update({
-  //     ocrdata:firebase.firestore.FieldValue.arrayUnion(ocr)
-  //   })
-  //   .then((docRef) => {
-  //     console.log(docRef);
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error adding document: ", error);
-  //   });
-  // }
 
   const handlecopytoClip = () => {
     if (ocr === "") {
@@ -229,9 +212,36 @@ function OcrApp() {
       return downloadIt();
     }
   };
+  const handlePdownload = (d) => {
+    //Prevoius history downlaod button
 
-  const hnadleClickPastOcr = () => {
-    setOcr();
+    const doc = new jsPDF();
+    doc.text(d, 20, 20);
+    doc.save("OCR-APP_Result.pdf");
+
+    toast({
+      position: "top",
+      title: "Downloaded",
+      status: "success",
+      duration: 9000,
+      isClosable: true,
+    });
+  };
+
+  const handleSingleHistory = (i, d) => {
+    const sdata = d;
+    console.log(sdata);
+    const updateRef = database.ocrdata.doc(currentUser.email);
+    updateRef
+      .update({
+        userocrData: firebase.firestore.FieldValue.arrayRemove(sdata),
+      })
+      .then((docRef) => {
+        console.log(docRef);
+      })
+      .catch((error) => {
+        console.error("Error adding document: ", error);
+      });
   };
 
   return (
@@ -246,9 +256,8 @@ function OcrApp() {
           <DrawerContent>
             <DrawerCloseButton />
             <DrawerHeader>
-              <Heading>History</Heading>{" "}
+              <Heading>History</Heading>
             </DrawerHeader>
-
             <DrawerBody
               css={{
                 "&::-webkit-scrollbar": {
@@ -268,49 +277,105 @@ function OcrApp() {
                 },
               }}
             >
-              <Text color={useColorModeValue("gray")} mb="10px">
+              <Text fontSize="15px" color={useColorModeValue("gray")} mb="10px">
                 {currentUser && currentUser.email}
               </Text>
+              {/* flexDirection="column-reverse" */}
 
               <Flex flexDirection="column-reverse">
-                {fdata &&
-                  fdata.length > 0 &&
+                {fdata && fdata.length ? (
                   fdata.map((d, i) => (
-                    <Box
-                      h="120px"
-                      p={2}
-                      cursor="pointer"
-                      borderRadius="10px"
-                      fontSize="14px"
-                      boxShadow="lg"
-                      border="lightgray solid 1px"
-                      overflowY="auto"
-                      mb="20px"
-                      key={i}
-                      css={{
-                        "&::-webkit-scrollbar": {
-                          backgroundColor: some,
-                          borderRadius: "10px",
-                          width: "8px",
-                        },
-                        "&::-webkit-scrollbar-track": {
-                          shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
-                          borderRadius: "10px",
-                          backgroundColor: some2,
-                        },
-                        "&::-webkit-scrollbar-thumb": {
-                          borderRadius: "10px",
-                          shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
-                          backgroundColor: some3,
-                        },
-                      }}
-                    >
-                      {" "}
-                      <Text key={i} color="useColorModeValue('white','black')">
-                        {d}
-                      </Text>
-                    </Box>
-                  ))}
+                    <Box key={i} position="relative" mb="20px">
+                      <Box
+                        position="relative"
+                        h="120px"
+                        p={2}
+                        // cursor="pointer"
+                        borderRadius="10px"
+                        fontSize="14px"
+                        boxShadow="lg"
+                        border="lightgray solid 1px"
+                        overflowY="auto"
+                        key={i}
+                        css={{
+                          "&::-webkit-scrollbar": {
+                            backgroundColor: some,
+                            borderRadius: "10px",
+                            width: "6px",
+                          },
+                          "&::-webkit-scrollbar-track": {
+                            shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
+                            borderRadius: "10px",
+                            backgroundColor: some2,
+                          },
+                          "&::-webkit-scrollbar-thumb": {
+                            borderRadius: "10px",
+                            shadow: "inset 0 0 6px rgba(0,0,0,0.3)",
+                            backgroundColor: some3,
+                          },
+                        }}
+                      >
+                        <Text key={i}>{d}</Text>
+                      </Box>
+                     
+                        <Box
+                          onClick={() => handleSingleHistory(i, d)}
+                          cursor="pointer"
+                          boxShadow="dark-lg"
+                          as={Circle}
+                          position="absolute"
+                          right="15px"
+                          css={{
+                            "box-shadow": "0px 0px 12px 1px rgba(0, 0, 0,0.5)",
+                          }}
+                          bg={bgColor2}
+                          bottom="10px"
+                          color="white"
+                          size="30px"
+                        >
+                          <Icon as={MdDelete} />
+                        </Box>
+                        <Box
+                          onClick={() => handlePdownload(d)}
+                          cursor="pointer"
+                          css={{
+                            "box-shadow": "0px 0px 12px 1px rgba(0, 0, 0,0.5)",
+                          }}
+                          as={Circle}
+                          position="absolute"
+                          right="55px"
+                          bg={bgColor2}
+                          bottom="10px"
+                          color="white"
+                          size="30px"
+                        >
+                          <Icon as={MdFileDownload} />
+                        </Box>
+                        <Box
+                          // onClick={() => handlePdownload(d)}
+                          cursor="pointer"
+                          css={{
+                            "box-shadow": "0px 0px 12px 1px rgba(0, 0, 0,0.5)",
+                          }}
+                          boxShadow="dark-lg"
+                          as={Circle}
+                          position="absolute"
+                          right="95px"
+                          bg={bgColor2}
+                          bottom="10px"
+                          color="white"
+                          size="30px"
+                        >
+                          <Icon as={MdEdit} />
+                        </Box>
+                      </Box>
+                  
+                  ))
+                ) : (
+                  <Text mt="200px" as={Center} color="gray">
+                    No Previous history
+                  </Text>
+                )}
               </Flex>
             </DrawerBody>
           </DrawerContent>
@@ -346,7 +411,7 @@ function OcrApp() {
             right={{ base: "18px", md: "-70px" }}
             size={{ base: "45px", md: "90px" }}
             bottom={{ base: "2.5" }}
-            bg={useColorModeValue("gray.900", "gray.700")}
+            bg={bgColor}
             color="white"
             zIndex="4"
           >
@@ -390,7 +455,7 @@ function OcrApp() {
             w={{ base: "70%", md: "100%" }}
             h={{ base: "50px", md: "80px" }}
             ml={{ base: "10px", md: "0px" }}
-            bg={useColorModeValue("gray.900", "gray.700")}
+            bg={bgColor}
           >
             <Box
               visibility={{ base: "visible", md: "hidden" }}
@@ -523,7 +588,7 @@ function OcrApp() {
               {ocr}
             </Text>
           </Box>
-          
+
           <Box
             onClick={handleDownload}
             cursor="pointer"
@@ -533,7 +598,7 @@ function OcrApp() {
             bottom={{ base: "-50px", md: "5px" }}
             right={{ base: "60px", md: "-60px" }}
             size={{ base: "45px", md: "50px" }}
-            bg={useColorModeValue("gray.900", "gray.700")}
+            bg={bgColor}
             color="white"
           >
             <Icon fontSize="25px" as={MdFileDownload} />
@@ -547,12 +612,11 @@ function OcrApp() {
             bottom={{ base: "-50px", md: "80px" }}
             right={{ base: "0px", md: "-60px" }}
             size={{ base: "45px", md: "50px" }}
-            bg={useColorModeValue("gray.900", "gray.700")}
+            bg={bgColor}
             color="white"
           >
             <Icon fontSize="20px" as={MdContentCopy} />
           </Box>
-
 
           {currentUser && (
             <Popover
@@ -591,21 +655,26 @@ function OcrApp() {
               </PopoverContent>
             </Popover>
           )}
-
         </Flex>
-        
-       
       </Container>
-      <Box  
-      mt={{base:"335px",md:"40px"}}       
- as={Center}
- fontFamily="mono"
- fontSize={{ base: "12px", md: "15px" }}
->
- Made with{" "}
- <Box fontSize={{ md: "20px", base: "15px" }}> &nbsp;❤️&nbsp; </Box>
- by&nbsp;<Link color='blue.500' href="https://github.com/kkeval" fontWeight='bold' isExternal >Keval Panchal</Link>
-</Box>
+      <Box
+        mt={{ base: "335px", md: "40px" }}
+        as={Center}
+        fontFamily="mono"
+        fontSize={{ base: "12px", md: "15px" }}
+      >
+        Made with{" "}
+        <Box fontSize={{ md: "20px", base: "15px" }}> &nbsp;❤️&nbsp; </Box>
+        by&nbsp;
+        <Link
+          color="blue.500"
+          href="https://github.com/kkeval"
+          fontWeight="bold"
+          isExternal
+        >
+          Keval Panchal
+        </Link>
+      </Box>
     </>
   );
 }
